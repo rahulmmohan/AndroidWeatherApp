@@ -12,6 +12,6 @@ import sample.network.rahul.android_weather_app.util.Utils
  */
 interface WeatherService {
 
-    @GET("/weather?key=" + Utils.API_KEY)
+    @GET("weather?appid=" + Utils.API_KEY)
     fun getWeather(@Query("lat") lat:Double ,@Query("lon") lon:Double ): Call<WeatherResponse>
 }

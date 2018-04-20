@@ -25,6 +25,8 @@ import sample.network.rahul.android_weather_app.gps.GPSTracker
 import sample.network.rahul.android_weather_app.util.Utils
 import sample.network.rahul.android_weather_app.util.internetconnection.ConnectionLiveData
 import sample.network.rahul.android_weather_app.viewmodel.WeatherViewModel
+import sample.network.rahul.android_weather_app.gps.CurrentLocationListener
+
 
 class WeatherActivity : AppCompatActivity() {
     companion object {
@@ -49,21 +51,33 @@ class WeatherActivity : AppCompatActivity() {
             }
         })
         updateUISuccess(Utils.fetchWeatherFromLocal(this))
+        subscribeToLocationUpdate()
         connectionLiveData = ConnectionLiveData(applicationContext)
         connectionLiveData.observe(this, Observer { isConnected ->
             this.isConnected = isConnected!!
-            if (checkPermission() && isConnected) {
-                callLocation()
+            //if (checkPermission() && isConnected)
+            {
+                //callLocation()
             }
         })
 
         swipeRefresh.setOnRefreshListener {
             if (isConnected) {
-                callLocation()
+                //callLocation()
             } else {
                 swipeRefresh.isRefreshing = false
             }
         }
+    }
+
+    private fun subscribeToLocationUpdate() {
+        CurrentLocationListener.getInstance(applicationContext).observe(this, Observer {
+            if (it != null) {
+                Log.e("MainActivityObserver", "latitude -> ${it.latitude}")
+                Log.e("MainActivityObserver", "longitude -> ${it.longitude}")
+                weatherViewModel.refetchWeather(it)
+            }
+        })
     }
 
     private fun updateUISuccess(weatherResponse: WeatherResponse?) {
@@ -175,7 +189,7 @@ class WeatherActivity : AppCompatActivity() {
             REQUEST_LOCATION -> when (resultCode) {
                 Activity.RESULT_OK -> {
                     // All required changes were successfully made
-                    if(isConnected) {
+                    if (isConnected) {
                         callLocation()
                     }
                     Toast.makeText(this@WeatherActivity, "Location enabled!", Toast.LENGTH_SHORT).show()
@@ -203,7 +217,7 @@ class WeatherActivity : AppCompatActivity() {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(isConnected) {
+                    if (isConnected) {
                         callLocation()
                     }
                     // permission was granted, yay! Do the

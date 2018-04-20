@@ -12,7 +12,7 @@ import java.util.*
 
 object Utils {
 
-    const val API_KEY = ""
+    const val API_KEY = "f91fed64bb6975394ea3b96cedc59acd"
     private const val PREFS_NAME = "open_weather"
 
     fun millisecondToTime(timeStamp: Long): String {

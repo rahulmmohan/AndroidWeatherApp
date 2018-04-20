@@ -15,7 +15,7 @@ import sample.network.rahul.android_weather_app.datasource.data.WeatherResponse
 class WeatherClient {
 
     private var weatherService: WeatherService
-    private var BASE_URL = "http://worksample-api.herokuapp.com/"
+    private var BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
     init {
         val retrofit = Retrofit.Builder()
